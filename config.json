@@ -1,0 +1,12 @@
+{
+  "host": "127.0.0.1",
+  "port": 8758,
+  "idleTimeoutSec": 120,
+  "maxScanEntries": 200000,
+  "scriptTimeoutMs": 100,
+  "longPathThreshold": 250,
+  "maxUndoHistory": 50,
+  "undoRetentionDays": 30,
+  "renameRetryCount": 3,
+  "renameRetryDelayMs": 50
+}

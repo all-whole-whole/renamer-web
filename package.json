@@ -1,0 +1,40 @@
+{
+  "name": "renamer-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Zero-dependency ReNamer-style batch renamer, served to the system browser by a local Node host",
+  "keywords": [
+    "renamer",
+    "batch-rename",
+    "file-renamer",
+    "bulk-rename",
+    "nodejs",
+    "zero-dependency",
+    "vanilla-javascript",
+    "local-first",
+    "windows"
+  ],
+  "homepage": "https://github.com/hertui34/renamer-web#readme",
+  "bugs": {
+    "url": "https://github.com/hertui34/renamer-web/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hertui34/renamer-web.git"
+  },
+  "license": "MIT",
+  "author": "hertui34",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "bin": {
+    "renamer-web": "bin/cli.mjs"
+  },
+  "scripts": {
+    "start": "node server/index.mjs",
+    "check": "node bin/check.mjs",
+    "test": "node test/run.mjs"
+  },
+  "dependencies": {}
+}
