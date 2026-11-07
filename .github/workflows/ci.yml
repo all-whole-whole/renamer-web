@@ -1,0 +1,60 @@
+name: CI
+
+# renamer-web is a Windows-first local host (native WinForms picker, long paths,
+# EPERM/EBUSY retries), so the suite runs on windows-latest only. Other platforms
+# get degraded behaviour by design, not a separate support tier.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: test / windows-latest / node ${{ matrix.node }}
+    runs-on: windows-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22', '24']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Verify there are no runtime dependencies
+        shell: pwsh
+        run: |
+          $pkg = Get-Content package.json -Raw | ConvertFrom-Json
+          if ($pkg.dependencies.PSObject.Properties.Count -gt 0) {
+            throw "runtime dependencies are not allowed in this project"
+          }
+          if (Test-Path node_modules) {
+            throw "node_modules must not exist: the project is zero-dependency"
+          }
+
+      - name: Run test suite
+        run: node test/run.mjs
+
+      - name: Ensure the workspace stayed clean
+        shell: pwsh
+        run: |
+          $dirty = git status --porcelain
+          if ($dirty) {
+            Write-Host $dirty
+            throw "test suite left files behind; it must clean up after itself"
+          }

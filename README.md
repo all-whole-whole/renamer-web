@@ -1,5 +1,6 @@
 # renamer-web
 
+[![CI](https://github.com/hertui34/renamer-web/actions/workflows/ci.yml/badge.svg)](https://github.com/hertui34/renamer-web/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A520-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)
@@ -186,8 +187,9 @@ node scripts\verify-scale.mjs --cdp http://127.0.0.1:9222 --path "E:\path\to\10k
 
 ## 贡献
 
-欢迎提 Issue / PR。改动前请先跑 `node test\run.mjs`，确保 55 项断言仍然全绿；
-涉及宿主生命周期、落盘或撤销的改动，请在 PR 描述里附上复现步骤与实际输出。
+欢迎提 Issue / PR。流程与环境要求见 [CONTRIBUTING.md](CONTRIBUTING.md)：零依赖是硬约束，
+提交前请确保 `node test\run.mjs` 的 55 项断言仍然全绿；涉及宿主生命周期、落盘或撤销的改动，
+请在 PR 描述里附上复现步骤与实际输出。
 
 ## 许可证
 
