@@ -6,8 +6,9 @@
 [![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)
 [![Platform](https://img.shields.io/badge/platform-Windows-0078D6?logo=windows&logoColor=white)](#已知限制)
 
-按 `ReNamer 7.3` 的能力面重构的批量重命名工具：**零第三方运行时依赖**的 Node 宿主 +
-**系统默认浏览器**里的单页工作台。不打包 Electron / Tauri / Chromium，不使用任何前端框架。
+按 `ReNamer 7.3` 的能力面重构的批量重命名工具：**零运行时依赖**的 Node 宿主 +
+**系统默认浏览器**里的 React 工作台。不打包 Electron / Tauri / Chromium；
+界面用 React 19 + Vite（devDependencies），构建产物随仓库提供，运行时仍然只需要 Node。
 
 ![界面](docs/ui.png)
 
@@ -21,11 +22,16 @@
 双击 start.cmd
 ```
 
+`start.cmd` 会短暂保留一个控制台窗口（等 `/api/ping` 与浏览器连接通常 1–6 秒）；这是
+cmd 宿主本身，不是 Node 宿主——Node 由 `launch-server.ps1` 以隐藏窗口拉起。按用户决定
+不再引入 VBS 或自编译 `start.exe`：黑窗可以接受，不可解释的二进制会带来 SmartScreen、
+杀软误报和额外排障成本。
+
 双击后发生什么：
 
 | 情况 | 表现 |
 |---|---|
-| 首次启动 | 后台起 Node 宿主（无黑窗），等 `/api/ping` 认领成功，再用默认浏览器打开普通标签页 |
+| 首次启动 | 后台起 Node 宿主（隐藏窗口）；启动器自身是 cmd 窗口，1–6 秒后随 `exit /b` 关闭 |
 | 已经开着 | 不重复起进程，直接把已打开的 `renamer-web` 窗口切到前台（约 1.3 秒） |
 | 端口被别的程序占 | 提示改 `config.json` 的 `port`，然后暂停等你按键 |
 | 没装 Node | 提示去 nodejs.org，然后暂停等你按键 |
@@ -40,6 +46,24 @@ node server\index.mjs       # 前台启动（CTRL+C 退出）
 ```
 
 浏览器打开 <http://127.0.0.1:8758/>。关掉标签页后宿主会在空闲 120 秒后自行退出。
+
+## 前端构建
+
+界面源码在 `web/src/`（React 19 + Vite，组件来自工作区 `ui/`）；`public/` 是构建产物，
+`public/diff.mjs` 由 `web/public/` 原样复制，测试仍直接 import 它。
+
+**工具链是共享的**：React / Vite / TypeScript 只装在 `ui/node_modules` 一份，本项目里没有
+`node_modules`，工作区内不需要 `npm install`。
+
+```powershell
+npm run web:check    # 用 ui 的 tsc 类型检查
+npm run web:dev      # 5395，/api 代理到 8758
+npm run web:build    # 用 ui 的 Vite 构建，产物写入 public/
+```
+
+`dependencies` 仍为空、`node_modules` 不进版本库，CI 的「零运行时依赖」门禁不受影响。
+把本项目单独 clone 出来时需要 `npm install` 恢复 `devDependencies`，再跑 `npm run web:standalone`。
+旧的原生实现留在 `web/legacy/`，回滚时把三个文件拷回 `public/` 再跑一次构建即可。
 
 ## 界面与快捷键
 
@@ -90,7 +114,8 @@ node server\index.mjs       # 前台启动（CTRL+C 退出）
 renamer-web/
 ├─ bin/            check.mjs（体检） / cli.mjs（无头执行）
 ├─ docs/           经验沉淀.md / ui.png / ui-inspector.png
-├─ public/         index.html / styles.css / app.js / diff.mjs
+├─ public/         构建产物：index.html + assets/ + diff.mjs（测试直接 import）
+├─ web/            React 源码（src/）、vite 配置、public/diff.mjs、legacy/ 旧原生实现
 ├─ scripts/        launch-server.ps1 / open-app.ps1 / verify-ui.mjs / verify-scale.mjs
 ├─ server/
 │  ├─ index.mjs    HTTP + SSE 网关、空闲生命周期
@@ -160,6 +185,9 @@ node test\run.mjs
 设备名、扩展名尾部点/空格、批次冲突与 600 同名自动修复、磁盘冲突、定长修复、两阶段落盘、
 EPERM/EBUSY 重试、撤销回滚、大小写改名、A↔B 互换、撤销日志回收、掩码过滤、Host/Origin
 精确校验、append 扫描后视图缓存失效、10k 项 500ms 性能预算。
+
+UI 端到端（React 版）：`node scripts\react-e2e.mjs <目录绝对路径>`，需先起宿主与
+`--remote-debugging-port=9335` 的浏览器；2026-11-08 实测 3 个文件 → Replace 规则 → 重命名 → 撤销恢复原名。
 
 ## 本机验收数据（Edge 156 / Node 24 / 1440×900）
 

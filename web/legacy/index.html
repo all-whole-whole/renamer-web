@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>renamer-web</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13M10 11v5M14 11v5"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 7H4v5"/><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.5"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+    <symbol id="i-wand" viewBox="0 0 24 24"><path d="m4 20 11-11M14 4l1.2 2.8L18 8l-2.8 1.2L14 12l-1.2-2.8L10 8l2.8-1.2zM19 14l.7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6-1.6-.7 1.6-.7z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.8 20h18.4z"/><path d="M12 9v5M12 17.2v.1"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5M3 17l9 5 9-5"/></symbol>
+    <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="7" r="1"/><circle cx="15" cy="7" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="17" r="1"/><circle cx="15" cy="17" r="1"/></symbol>
+  </svg>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-layers"/></svg></span>
+      <span class="brand-name">renamer<span>web</span></span>
+      <span class="brand-tag">ZERO-DEP</span>
+    </div>
+
+    <div class="preset" aria-label="预设">
+      <span class="preset-label">预设</span>
+      <select id="presetSelect" aria-label="选择预设"></select>
+      <button id="btnLoadPreset" class="ghost btn-sm">载入</button>
+      <button id="btnSavePreset" class="ghost btn-sm">保存</button>
+      <button id="btnSaveAsPreset" class="ghost btn-sm">另存为</button>
+      <button id="btnDeletePreset" class="icon-btn" title="删除当前预设" aria-label="删除当前预设">
+        <svg class="icon"><use href="#i-trash"/></svg>
+      </button>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="topbar-status">
+      <span class="connection-light" id="connectionLight" title="与本地宿主的连接状态"></span>
+      <span id="statusBadge" class="badge" role="status" aria-live="polite">就绪</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel rules-panel" aria-label="规则工作台">
+      <div class="panel-head rules-head">
+        <div class="panel-title">
+          <span class="eyebrow">RULES</span>
+          <h2>规则工作台 <span class="count" id="ruleCount"></span></h2>
+        </div>
+        <div class="rule-tools">
+          <button id="btnRuleUp" class="icon-btn" title="上移规则" aria-label="上移规则">
+            <svg class="icon"><use href="#i-up"/></svg>
+          </button>
+          <button id="btnRuleDown" class="icon-btn" title="下移规则" aria-label="下移规则">
+            <svg class="icon"><use href="#i-down"/></svg>
+          </button>
+          <button id="btnDeleteRule" class="icon-btn" title="删除规则" aria-label="删除规则">
+            <svg class="icon"><use href="#i-trash"/></svg>
+          </button>
+          <button id="btnClearRules" class="icon-btn" title="清空规则" aria-label="清空规则">
+            <svg class="icon"><use href="#i-x"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="rule-toolbar">
+        <button id="btnAddRule" class="primary btn-block">
+          <svg class="icon"><use href="#i-plus"/></svg>
+          新建规则
+        </button>
+      </div>
+
+      <div class="rule-scroll">
+        <ol id="ruleList" class="rule-list" aria-label="规则栈"></ol>
+        <div id="ruleEmpty" class="empty rule-empty">
+          <span class="empty-icon"><svg class="icon"><use href="#i-wand"/></svg></span>
+          <strong>规则栈还是空的</strong>
+          <span>规则按从上到下的顺序依次作用，<br />先从一条「替换」开始。</span>
+          <button id="btnAddFirstRule" class="ghost btn-sm">+ 添加第一条规则</button>
+        </div>
+      </div>
+
+      <section id="ruleInspector" class="inspector" aria-label="规则编辑" hidden>
+        <div class="inspector-head">
+          <div>
+            <span class="eyebrow" id="inspectorKind">EDIT</span>
+            <h3 id="inspectorTitle">编辑规则</h3>
+          </div>
+          <button id="btnInspectorClose" class="icon-btn" title="关闭编辑" aria-label="关闭编辑">
+            <svg class="icon"><use href="#i-x"/></svg>
+          </button>
+        </div>
+
+        <div class="inspector-body">
+          <div id="inspectorHelp" class="rule-help" aria-live="polite"></div>
+          <div id="inspectorTypeWrap" class="inspector-types">
+            <div class="field-label">规则类型</div>
+            <div id="ruleTypeList" class="type-grid"></div>
+          </div>
+          <div id="ruleFields" class="inspector-fields"></div>
+          <div id="inspectorError" class="inline-error" hidden></div>
+        </div>
+
+        <div class="inspector-foot">
+          <button id="btnDeleteRuleInline" class="ghost danger-text" hidden>删除</button>
+          <div class="spacer"></div>
+          <button id="btnInspectorCancel" class="ghost btn-sm">取消</button>
+          <button id="btnInspectorApply" class="primary btn-sm">应用并预览</button>
+        </div>
+      </section>
+    </section>
+
+    <section class="panel files-panel" aria-label="文件比对">
+      <div class="files-head">
+        <div class="panel-title files-title">
+          <span class="eyebrow">FILES</span>
+          <h2>文件比对 <span class="count" id="fileCount"></span></h2>
+        </div>
+
+        <div class="actionbar">
+          <div class="button-group">
+            <button id="btnAddFiles" class="primary-soft">
+              <svg class="icon"><use href="#i-file"/></svg>
+              添加文件
+            </button>
+            <button id="btnAddFolders" class="ghost">
+              <svg class="icon"><use href="#i-folder"/></svg>
+              添加目录
+            </button>
+            <button id="btnClearFiles" class="icon-btn" title="清空文件列表" aria-label="清空文件列表">
+              <svg class="icon"><use href="#i-trash"/></svg>
+            </button>
+          </div>
+
+          <label class="scan-option" title="开启后递归扫描所有层级子文件夹；关闭后只扫描所选文件夹当前层">
+            <input id="chkRecurse" type="checkbox" checked />
+            <span>包含子文件夹</span>
+          </label>
+
+          <div class="actionbar-end">
+            <label class="search-field">
+              <svg class="icon"><use href="#i-search"/></svg>
+              <input id="searchBox" type="search" placeholder="搜索文件名…" autocomplete="off" aria-label="搜索文件名" />
+              <kbd>/</kbd>
+            </label>
+            <label class="check" title="规则变化后自动重新计算预览">
+              <input type="checkbox" id="chkAutoPreview" checked /> 自动预览
+            </label>
+            <label class="check" title="自动为重复目标追加 _1、_2 后缀">
+              <input type="checkbox" id="chkAutoFix" /> 自动修复
+            </label>
+            <button id="btnPreview" class="ghost" title="刷新预览 (F5)">
+              <svg class="icon"><use href="#i-wand"/></svg>
+              预览
+            </button>
+            <button id="btnRename" class="primary btn-rename" disabled>
+              <svg class="icon"><use href="#i-check"/></svg>
+              <span id="renameLabel">开始重命名</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="metrics-wrap">
+        <div class="metrics" id="metrics" aria-live="polite"></div>
+        <button id="btnFixConflicts" class="fix-conflicts" hidden>
+          <svg class="icon"><use href="#i-wand"/></svg>
+          一键修复冲突
+        </button>
+      </div>
+
+      <div class="viewtabs" id="viewTabs" role="tablist" aria-label="文件视图">
+        <button class="tab active" data-view="focus" role="tab" aria-selected="true">关注项</button>
+        <button class="tab" data-view="all" role="tab" aria-selected="false">全部</button>
+        <button class="tab" data-view="changed" role="tab" aria-selected="false">已改变</button>
+        <button class="tab" data-view="issues" role="tab" aria-selected="false">问题项</button>
+      </div>
+
+      <div
+        id="gridViewport"
+        class="grid-viewport"
+        tabindex="0"
+        role="grid"
+        aria-label="文件列表"
+        aria-colcount="6"
+        aria-multiselectable="true"
+      >
+        <div class="grid-head" role="row">
+          <span class="cell-check" role="columnheader"><input type="checkbox" id="chkAll" title="全选 / 全不选" aria-label="全选或全不选" /></span>
+          <span class="cell-idx" role="columnheader">#</span>
+          <span role="columnheader">原文件名</span>
+          <span role="columnheader">新文件名</span>
+          <span class="cell-dir" role="columnheader">目录</span>
+          <span class="cell-status" role="columnheader">状态</span>
+        </div>
+
+        <div id="gridBody" class="grid-body">
+          <div id="gridSpacer" class="grid-spacer"></div>
+          <div id="gridRows" class="grid-rows" role="rowgroup"></div>
+          <div id="gridEmpty" class="empty grid-empty">
+            <span class="empty-icon"><svg class="icon"><use href="#i-file"/></svg></span>
+            <h3 id="gridEmptyTitle">文件列表为空</h3>
+            <p id="gridEmptyText">用「添加文件 / 添加目录」导入，或按 <kbd>Ctrl+O</kbd> 打开文件。</p>
+            <div class="shortcuts">
+              <span><kbd>Ctrl</kbd><kbd>O</kbd> 添加文件</span>
+              <span><kbd>Ctrl</kbd><kbd>N</kbd> 新建规则</span>
+              <span><kbd>Ctrl</kbd><kbd>Enter</kbd> 执行</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bottombar">
+    <div class="undo-zone">
+      <span class="eyebrow">HISTORY</span>
+      <span id="undoInfo" class="muted">Undo: 无</span>
+    </div>
+    <button id="btnUndo" class="ghost btn-sm" disabled>
+      <svg class="icon"><use href="#i-undo"/></svg>
+      撤销上次
+    </button>
+    <span class="footer-divider" aria-hidden="true"></span>
+    <button id="btnExport" class="ghost btn-sm">
+      <svg class="icon"><use href="#i-download"/></svg>
+      CSV
+    </button>
+    <button id="btnExportJson" class="ghost btn-sm">
+      <svg class="icon"><use href="#i-download"/></svg>
+      JSON
+    </button>
+    <div class="spacer"></div>
+    <span id="perfInfo" class="perf-info muted"></span>
+    <span class="conn-info">
+      <span class="connection-light" id="connLight"></span>
+      <span class="muted" id="connInfo">正在连接宿主…</span>
+    </span>
+  </footer>
+
+  <div id="metaTagModal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="metaTagTitle">
+    <div class="modal-card" role="document">
+      <div class="modal-head">
+        <div>
+          <span class="eyebrow">META TAGS</span>
+          <h3 id="metaTagTitle">插入元标签</h3>
+        </div>
+        <button id="btnMetaTagClose" class="icon-btn" type="button" title="关闭" aria-label="关闭元标签">
+          <svg class="icon"><use href="#i-x"/></svg>
+        </button>
+      </div>
+      <div class="modal-body meta-tag-body">
+        <div id="metaTagList" class="meta-tag-list" role="listbox" aria-label="元标签列表"></div>
+        <aside class="meta-tag-detail">
+          <strong id="metaTagName"></strong>
+          <code id="metaTagToken"></code>
+          <p id="metaTagDesc"></p>
+          <div class="meta-tag-example">
+            <span>示例</span>
+            <code id="metaTagExample"></code>
+          </div>
+          <p class="meta-tag-note">插入的是标签本身，预览时按每个文件实时展开。</p>
+        </aside>
+      </div>
+      <div class="modal-foot">
+        <div class="spacer"></div>
+        <button id="btnMetaTagCancel" class="ghost btn-sm" type="button">取消</button>
+        <button id="btnMetaTagInsert" class="primary btn-sm" type="button">插入</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

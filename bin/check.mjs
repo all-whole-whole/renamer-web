@@ -56,7 +56,7 @@ async function checkDataDir() {
 }
 
 function checkAssets() {
-  const required = ['public/index.html', 'public/app.js', 'public/diff.mjs', 'public/styles.css', 'server/index.mjs'];
+  const required = ['public/index.html', 'public/diff.mjs', 'server/index.mjs', 'web/src/main.tsx'];
   const missing = required.filter((rel) => !existsSync(join(ROOT, rel)));
   record('静态资源', missing.length === 0, missing.length ? `缺少 ${missing.join(', ')}` : '齐全', missing.length ? '重新解压完整目录' : '');
 }
