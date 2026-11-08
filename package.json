@@ -14,13 +14,13 @@
     "windows",
     "react"
   ],
-  "homepage": "https://github.com/hertui34/renamer-web#readme",
+  "homepage": "https://github.com/all-whole-whole/renamer-web#readme",
   "bugs": {
-    "url": "https://github.com/hertui34/renamer-web/issues"
+    "url": "https://github.com/all-whole-whole/renamer-web/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hertui34/renamer-web.git"
+    "url": "git+https://github.com/all-whole-whole/renamer-web.git"
   },
   "license": "MIT",
   "author": "hertui34",

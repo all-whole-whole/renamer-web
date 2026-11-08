@@ -88,5 +88,5 @@ chore: 升级 CI 到 Node 24
 
 ## 报告问题
 
-用 [Bug 模板](https://github.com/hertui34/renamer-web/issues/new?template=bug_report.yml)，
+用 [Bug 模板](https://github.com/all-whole-whole/renamer-web/issues/new?template=bug_report.yml)，
 把 `node bin\check.mjs` 的输出和 `.tmp\logs\server.err.log` 一并贴上。没有复现步骤的 issue 通常无法处理。

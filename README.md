@@ -1,6 +1,6 @@
 # renamer-web
 
-[![CI](https://github.com/hertui34/renamer-web/actions/workflows/ci.yml/badge.svg)](https://github.com/hertui34/renamer-web/actions/workflows/ci.yml)
+[![CI](https://github.com/all-whole-whole/renamer-web/actions/workflows/ci.yml/badge.svg)](https://github.com/all-whole-whole/renamer-web/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A520-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](package.json)

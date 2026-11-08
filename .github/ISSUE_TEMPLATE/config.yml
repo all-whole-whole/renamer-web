@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
   - name: 使用说明与设计取舍
-    url: https://github.com/hertui34/renamer-web#readme
+    url: https://github.com/all-whole-whole/renamer-web#readme
     about: README 覆盖启动方式、快捷键、18 条规则、HTTP API 与已知限制。
   - name: 贡献流程
-    url: https://github.com/hertui34/renamer-web/blob/main/CONTRIBUTING.md
+    url: https://github.com/all-whole-whole/renamer-web/blob/main/CONTRIBUTING.md
     about: 环境要求、测试要求、零依赖红线与提交信息规范。
