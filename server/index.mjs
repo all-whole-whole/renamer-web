@@ -7,7 +7,7 @@ import http from 'node:http';
 import { promises as fs, readFileSync, existsSync } from 'node:fs';
 import { join, extname, resolve, sep, basename, dirname } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { config, PUBLIC_DIR, presetsDir, undoDir, getPref, setPref } from './config.mjs';
+import { config, PUBLIC_DIR, APP_VERSION, presetsDir, undoDir, getPref, setPref } from './config.mjs';
 import { scanPaths } from './renamer/scanner.mjs';
 import { runPreview, computeStats } from './renamer/engine.mjs';
 import { RenameTransaction, undoBatch, listBatches, toLongPath } from './renamer/transaction.mjs';
@@ -173,7 +173,7 @@ async function handleApi(req, res, url) {
   if (path === '/api/ping' && method === 'GET') {
     return json(res, 200, {
       app: 'renamer-web',
-      version: '0.1.0',
+      version: APP_VERSION,
       pid: process.pid,
       clients: state.clients.size,
       items: state.items.length,

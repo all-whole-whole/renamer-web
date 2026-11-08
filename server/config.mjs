@@ -35,6 +35,12 @@ function readJsonSafe(path, fallback) {
 }
 
 const fileConfig = readJsonSafe(join(ROOT, 'config.json'), {});
+
+// 版本号只有 package.json 一个来源：这里曾经写死过 '0.1.0'，升版本时漏改，
+// /api/ping 报的版本就比 package.json 落后一整代。
+const pkgMeta = readJsonSafe(join(ROOT, 'package.json'), {});
+export const APP_VERSION = typeof pkgMeta.version === 'string' ? pkgMeta.version : '0.0.0';
+
 const envPort = Number(process.env.RENAMER_WEB_PORT);
 const portOverride = Number.isInteger(envPort) && envPort > 0 && envPort <= 65535 ? envPort : null;
 
