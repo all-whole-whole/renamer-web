@@ -49,20 +49,19 @@ node server\index.mjs       # 前台启动（CTRL+C 退出）
 
 ## 前端构建
 
-界面源码在 `web/src/`（React 19 + Vite，组件来自工作区 `ui/`）；`public/` 是构建产物，
-`public/diff.mjs` 由 `web/public/` 原样复制，测试仍直接 import 它。
-
-**工具链是共享的**：React / Vite / TypeScript 只装在 `ui/node_modules` 一份，本项目里没有
-`node_modules`，工作区内不需要 `npm install`。
+界面源码在 `web/src/`（React 19 + Vite），组件基座内联在 `web/ui/`（见
+[web/ui/README.md](web/ui/README.md)）；`public/` 是构建产物，`public/diff.mjs` 由
+`web/public/` 原样复制，测试仍直接 import 它。
 
 ```powershell
-npm run web:check    # 用 ui 的 tsc 类型检查
+npm ci               # 只装 devDependencies（React / Vite / TypeScript）
+npm run web:check    # tsc 类型检查
 npm run web:dev      # 5395，/api 代理到 8758
-npm run web:build    # 用 ui 的 Vite 构建，产物写入 public/
+npm run web:build    # Vite 构建，产物写入 public/
 ```
 
-`dependencies` 仍为空、`node_modules` 不进版本库，CI 的「零运行时依赖」门禁不受影响。
-把本项目单独 clone 出来时需要 `npm install` 恢复 `devDependencies`，再跑 `npm run web:standalone`。
+`dependencies` 仍为空、`node_modules` 不进版本库，CI 的「零运行时依赖」门禁不受影响：
+**运行**这个工具不需要任何 `npm install`，只有当你要改界面时才需要上面四条命令。
 旧的原生实现留在 `web/legacy/`，回滚时把三个文件拷回 `public/` 再跑一次构建即可。
 
 ## 界面与快捷键
@@ -115,8 +114,9 @@ renamer-web/
 ├─ bin/            check.mjs（体检） / cli.mjs（无头执行）
 ├─ docs/           经验沉淀.md / ui.png / ui-inspector.png
 ├─ public/         构建产物：index.html + assets/ + diff.mjs（测试直接 import）
-├─ web/            React 源码（src/）、vite 配置、public/diff.mjs、legacy/ 旧原生实现
-├─ scripts/        launch-server.ps1 / open-app.ps1 / verify-ui.mjs / verify-scale.mjs
+├─ web/            React 源码（src/）、内联组件基座（ui/）、vite 配置、public/diff.mjs
+├─ web/legacy/     旧原生实现（app.js / styles.css / index.html / verify-ui.mjs）
+├─ scripts/        launch-server.ps1 / open-app.ps1 / react-e2e.mjs / verify-scale.mjs
 ├─ server/
 │  ├─ index.mjs    HTTP + SSE 网关、空闲生命周期
 │  ├─ http-guard.mjs  Host / Origin 精确校验

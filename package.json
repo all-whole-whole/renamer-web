@@ -34,10 +34,9 @@
     "start": "node server/index.mjs",
     "check": "node bin/check.mjs",
     "test": "node test/run.mjs",
-    "web:dev": "node ../ui/build/dev.mjs renamer",
-    "web:build": "node ../ui/build/build.mjs renamer",
-    "web:check": "node ../ui/build/check.mjs renamer",
-    "web:standalone": "vite build --config web/vite.standalone.config.ts"
+    "web:dev": "vite --config web/vite.standalone.config.ts",
+    "web:build": "vite build --config web/vite.standalone.config.ts",
+    "web:check": "tsc -p web/tsconfig.json --noEmit"
   },
   "dependencies": {},
   "devDependencies": {

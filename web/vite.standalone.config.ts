@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 const repo = fileURLToPath(new URL('..', import.meta.url));
-const ui = fileURLToPath(new URL('../../ui/src', import.meta.url));
+// 组件基座内联在 web/ui（见 web/ui/README.md），构建不依赖仓库外的目录。
+const ui = fileURLToPath(new URL('./ui', import.meta.url));
 
 export default defineConfig({
   root: here,
@@ -17,7 +18,7 @@ export default defineConfig({
   server: {
     port: 5395,
     strictPort: false,
-    fs: { allow: [repo, ui] },
+    fs: { allow: [repo] },
     proxy: {
       '/api': { target: 'http://127.0.0.1:8758', changeOrigin: false },
     },

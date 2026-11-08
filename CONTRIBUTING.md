@@ -7,7 +7,7 @@
 
 | 项目 | 要求 | 说明 |
 |---|---|---|
-| Node.js | ≥ 20 | 只用 `node:` 内置模块，没有 `node_modules` |
+| Node.js | ≥ 20 | 运行时只用 `node:` 内置模块；只有改界面才装 `devDependencies` |
 | 操作系统 | Windows 10 / 11 | 原生文件夹对话框、长路径、`EPERM`/`EBUSY` 重试都依赖 Win32 |
 | PowerShell | 5.1 | 启动脚本与原生对话框走 WinForms，非 PowerShell 7 |
 | 浏览器 | 任意现代浏览器 | 只是普通标签页，不需要扩展或特殊 Profile |
@@ -41,11 +41,25 @@ node test\run.mjs
 CI 会直接失败的情况：
 
 - `package.json` 里出现任何 `dependencies`
-- 仓库里出现 `node_modules`
+- 签入 `node_modules`（本地为改界面装的 `devDependencies` 不算，已被 `.gitignore` 排除）
 - 测试跑完留下脏文件（`git status` 非空）
 
 需要某个能力时，优先用 `node:http` / `node:fs` / `node:path` / `node:vm` / `node:crypto` /
 `node:child_process` 拼出来。确实需要外部库时请先开 Issue 讨论，不要在 PR 里直接加。
+
+## 改界面
+
+界面是 React 19 + Vite：源码在 `web/src/`，组件基座内联在 `web/ui/`（不要手改 `web/ui/`，
+同步方式见那里的 README）。构建工具链放在 `devDependencies`，只在改界面时才需要安装：
+
+```powershell
+npm ci               # 安装 React / Vite / TypeScript
+npm run web:check    # 类型检查（tsc --noEmit）
+npm run web:build    # 产物写入 public/
+node test\run.mjs    # 改完仍然要全绿
+```
+
+`public/` 是签入的构建产物：改了 `web/src/` 却没重新构建并提交 `public/`，用户看到的还是旧界面。
 
 ## 代码结构
 
@@ -53,7 +67,7 @@ CI 会直接失败的情况：
 
 1. **一条规则一个文件**，只导出 `meta` 与 `apply`，不要在规则里读全局状态。
 2. **落盘只走 `transaction.mjs`**，任何直接 `fs.rename` 的写法都不接受——两阶段改名是撤销能力的前提。
-3. **前端不拼 HTML 字符串**，用 DOM API 建节点；文件名是不可信输入。
+3. **前端不拼 HTML 字符串**，交给 React 组件渲染；文件名是不可信输入。
 
 ## 提交信息
 

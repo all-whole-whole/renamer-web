@@ -14,14 +14,10 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "typeRoots": ["../../ui/node_modules/@types", "../../ui/node_modules"],
     "types": ["vite/client"],
     "baseUrl": ".",
     "paths": {
-      "@ui/*": ["../../ui/src/*"],
-      "react": ["../../ui/node_modules/@types/react"],
-      "react/*": ["../../ui/node_modules/@types/react/*"],
-      "react-dom": ["../../ui/node_modules/@types/react-dom"]
+      "@ui/*": ["./ui/*"]
     }
   },
   "include": ["src"]
